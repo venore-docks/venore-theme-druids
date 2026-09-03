@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { HeaderSlotProps } from "@venore/theme-sdk";
 import { MobileNavToggleButton } from "./MobileNavToggleButton";
-import { BrandMark } from "./BrandMark";
+import { PlatformBrand } from "./PlatformBrand";
 import { UserMenu } from "./UserMenu";
 
 // Faixa estática (sem a mecânica de encolher/inverter cor ao rolar do Venore Slime —
@@ -16,7 +16,7 @@ export function HeaderSlot({ brand, userbarEnabled, headerNavItems, user, canAcc
       <div className="flex min-w-0 items-center gap-3">
         <MobileNavToggleButton />
         <Link href="/" aria-label={brand.name} className="inline-flex min-w-0 items-center">
-          <BrandMark name={brand.name} />
+          <PlatformBrand {...brand} isScrolled={false} />
         </Link>
       </div>
 
