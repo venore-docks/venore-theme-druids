@@ -1,32 +1,34 @@
 import { Sitemap } from "@venore/theme-sdk/ui";
 import type { FooterSlotProps } from "@venore/theme-sdk";
+import { PlatformBrand } from "./PlatformBrand";
 
-// Faixa fina, não o bloco alto com painel de marca em destaque do Venore Slime — a identidade
-// visual deste tema já mora inteira na Sidebar (rail) e no Header, então o rodapé só precisa
-// fechar a página. brand.color (usado pelo Slime como sublinhado de acento sob a marca) não é
-// consumido aqui — decisão de design deste tema, o contrato só exige aceitar o campo, não usá-lo
-// (mesmo precedente de venore-basic ignorando sidebarLeft.collapsed).
+// Rodapé organizado em duas zonas (correção desta sessão: "footer mal organizado" — a versão
+// anterior amontoava ponto neon / nome / descrição / sitemap numa linha só): marca real
+// (PlatformBrand, não texto) + descrição à esquerda; colunas de sitemap à direita. Borda superior
+// em tom de madeira (--header-border-strong), no espírito "bosque vivo" do tema. brand.color não é
+// consumido aqui — o contrato só exige aceitar o campo.
 export function FooterSlot({ brand, sitemapItems, creditsEnabled }: FooterSlotProps) {
   return (
-    <footer className="mt-auto border-t border-border/70 bg-card/60 px-4 py-4 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-8 gap-y-4">
-        <div className="flex min-w-0 items-center gap-2">
-          <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_6px_var(--primary)]" />
-          <p className="shrink-0 text-xs font-semibold uppercase tracking-caps text-foreground">{brand.name}</p>
+    <footer className="mt-auto border-t-2 border-(--header-border-strong) px-6 py-10 sm:px-10">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+        <div className="space-y-4">
+          <div className="max-w-40">
+            <PlatformBrand {...brand} isScrolled={false} />
+          </div>
           {brand.description.trim().length > 0 && (
-            <p className="hidden max-w-[32ch] truncate text-xs text-muted-foreground md:block">{brand.description}</p>
+            <p className="max-w-[36ch] text-sm leading-6 text-muted-foreground">{brand.description}</p>
           )}
         </div>
 
         {sitemapItems.length > 0 && (
-          <div className="flex-1 lg:max-w-2xl">
+          <div className="lg:justify-self-end">
             <Sitemap items={sitemapItems} />
           </div>
         )}
       </div>
 
       {creditsEnabled && (
-        <div data-credits className="mx-auto mt-3 w-full max-w-7xl border-t border-border/70 pt-3 text-xs text-muted-foreground">
+        <div data-credits className="mx-auto mt-8 w-full max-w-7xl border-t border-border pt-4 text-xs text-muted-foreground">
           Venore Docks
         </div>
       )}

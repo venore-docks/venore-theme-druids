@@ -12,7 +12,7 @@ import { UserMenu } from "./UserMenu";
 // component puro — nada aqui rastreia estado de scroll.
 export function HeaderSlot({ brand, userbarEnabled, headerNavItems, user, canAccessAdmin, onSignOut }: HeaderSlotProps) {
   return (
-    <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between gap-6 border-b border-(--header-border-subtle) bg-card px-6 text-foreground shadow-[0_1px_0_var(--header-border-strong)] sm:px-10">
+    <header className="sticky top-0 z-40 flex h-20 shrink-0 items-center justify-between gap-6 border-b border-(--header-border-subtle) bg-card px-6 text-foreground shadow-[0_1px_0_var(--header-border-strong)] sm:px-10 lg:h-24">
       <div className="flex min-w-0 items-center gap-3">
         <MobileNavToggleButton />
         <Link href="/" aria-label={brand.name} className="py-2 inline-flex min-w-0 items-center">

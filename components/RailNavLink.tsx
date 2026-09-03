@@ -23,7 +23,7 @@ function isDescendantActive(item: MainNavItem, pathname: string | null): boolean
 }
 
 export const ICON_BUTTON_BASE =
-  "group/rail-item relative flex items-center gap-3 rounded-sm text-muted-foreground ui-motion-base outline-none hover:scale-[1.02] hover:bg-accent/10 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring";
+  "group/rail-item relative flex items-center gap-3 rounded-panel text-muted-foreground ui-motion-base outline-none hover:bg-primary/10 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring";
 
 const COLLAPSED_BUTTON = "size-11 justify-center self-center";
 const EXPANDED_BUTTON = "h-11 w-full justify-start px-3";
@@ -31,10 +31,10 @@ const EXPANDED_BUTTON = "h-11 w-full justify-start px-3";
 export const FLYOUT_BASE =
   "pointer-events-none invisible absolute left-full top-1/2 z-50 ml-2 -translate-x-1 -translate-y-1/2 rounded-sm border border-border bg-popover text-popover-foreground opacity-0 shadow-float ui-motion-base group-hover/rail-item:visible group-hover/rail-item:pointer-events-auto group-hover/rail-item:translate-x-0 group-hover/rail-item:opacity-100 group-focus-within/rail-item:visible group-focus-within/rail-item:pointer-events-auto group-focus-within/rail-item:translate-x-0 group-focus-within/rail-item:opacity-100";
 
-// Glow pulsante (@keyframes nightcity-pulse, theme.css) — única animação decorativa deste tema
-// além das transições de motion padrão; sinaliza "você está aqui" sem depender só de cor.
+// Nervura de seiva respirando devagar (@keyframes druids-breath, theme.css) — única animação
+// decorativa do tema; sinaliza "você está aqui" sem depender só de cor.
 const ACTIVE_BAR =
-  "absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_6px_var(--primary)] animate-[nightcity-pulse_2.4s_ease-in-out_infinite]";
+  "absolute left-0 top-1/2 h-7 w-1 -translate-y-1/2 rounded-full bg-primary animate-[druids-breath_3.2s_ease-in-out_infinite]";
 
 export function RailNavLink({ item, collapsed }: { item: MainNavItem; collapsed: boolean }) {
   const pathname = usePathname();

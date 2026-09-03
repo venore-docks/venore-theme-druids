@@ -1,172 +1,156 @@
-/* Venore Night City — tema inspirado em Night City de Cyberpunk 2077 (CD Projekt Red). Shell
-   própria (components/Shell.tsx) com arranjo estruturalmente diferente do Venore Slime — rail de
-   ícones de altura inteira em vez de header no topo + sidebar colapsável — não só uma reskin de
-   cor. Este arquivo cobre a mesma paleta de tokens semânticos que qualquer tema instalado precisa
-   declarar (docs/venore-docks.md — "Contrato de design tokens — proibido valor hardcoded"): todo
-   componente consome só variável semântica, então trocar de tema troca este arquivo + a Shell.
+/* Venore Druids — "Bosque vivo". Um bosque de druidas: musgo, casca de árvore, luz filtrada por
+   folhas. Nada de HUD/neon (a versão anterior deste arquivo era uma cópia do tema Night City) —
+   aqui tudo é orgânico: raio macio de folha, movimento físico lento, verde-musgo como cor viva e
+   madeira/âmbar como acento quente. Claro é o padrão (bosque de dia, calmo); escuro é o mesmo
+   bosque ao anoitecer, lanterna acesa.
 
-   Paleta: ciano neon (holograma/interface) + magenta neon (letreiro/braindance) sobre base quase
-   preta com fundo azul-violeta profundo (céu poluído da cidade à noite), amarelo neon (a cor de
-   marca de Cyberpunk 2077) reservado só pro token semântico `warning`. Raio quase zero e cantos
-   quase retos (estética de HUD/holograma, não orgânica). Motion rápido e seco (glitch/snap), não
-   suave — combina com interface digital/holográfica, não com movimento físico.
-
-   [data-theme="druids"] no <html> ativa este bloco; .dark também vive no <html> (nunca
-   aninhado), por isso a variante escura é o seletor composto abaixo. O bloco base (claro) é
-   Night City de dia — smog, luz cinza-azulada, letreiros neon já ligados mas discretos contra o
-   céu claro; .dark é a cidade à noite, a leitura "padrão" da referência. */
+   [data-theme="druids"] no <html> ativa este bloco; .dark também vive no <html> (nunca aninhado),
+   por isso a variante escura é o seletor composto abaixo. Tudo que não muda entre light/dark
+   (raio, motion, tipografia, dimensões) é declarado só no bloco base — herda para .dark. */
 
 [data-theme="druids"] {
-  /* raio — quase reto, estética de HUD/holograma, não orgânica */
-  --radius: 0.1rem;
+  /* raio — macio e orgânico, curva de folha; nada de canto reto */
+  --radius: 0.55rem;
   --radius-shell: 0rem;
-  --radius-panel: 0.1rem;
-  --ui-radius-scale-sm: 0.5;
+  --radius-panel: 0.9rem;
+  --ui-radius-scale-sm: 0.65;
   --ui-radius-scale-md: 1;
-  --ui-radius-scale-lg: 1.5;
-  --ui-radius-scale-xl: 2;
-  --ui-radius-scale-2xl: 2.5;
-  --ui-radius-scale-3xl: 3;
-  --ui-radius-scale-4xl: 3.5;
+  --ui-radius-scale-lg: 1.7;
+  --ui-radius-scale-xl: 2.4;
+  --ui-radius-scale-2xl: 3;
+  --ui-radius-scale-3xl: 3.6;
+  --ui-radius-scale-4xl: 4.2;
 
-  --ui-tracking-caps: 0.28em;
+  /* caps discreto — leitura humanista, não industrial */
+  --ui-tracking-caps: 0.1em;
 
-  /* motion — rápido e seco, "glitch/snap" digital, não movimento físico suave */
-  --ui-motion-fast: 80ms;
-  --ui-motion-base: 140ms;
-  --ui-motion-slow: 220ms;
-  --ui-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ui-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  /* motion — físico e sem pressa, como galho balançando; nada de snap digital */
+  --ui-motion-fast: 140ms;
+  --ui-motion-base: 220ms;
+  --ui-motion-slow: 360ms;
+  --ui-ease-standard: cubic-bezier(0.33, 1, 0.68, 1);
+  --ui-ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* tipografia — display mais condensado/tracking negativo, leitura de HUD */
+  /* tipografia — corpo com respiro generoso, display com tracking levemente POSITIVO (ao
+     contrário do -0.02em de HUD da versão antiga): letra que abre, orgânica */
   --ui-font-weight-body: 400;
   --ui-font-weight-medium: 500;
   --ui-font-weight-semibold: 600;
-  --ui-font-weight-display: 700;
-  --ui-leading-copy: 1.5;
-  --ui-leading-display: 1.1;
-  --ui-tracking-copy: 0em;
-  --ui-tracking-display: -0.02em;
+  --ui-font-weight-display: 640;
+  --ui-leading-copy: 1.68;
+  --ui-leading-display: 1.22;
+  --ui-tracking-copy: 0.004em;
+  --ui-tracking-display: 0.006em;
 
   /* controles */
-  --ui-control-height-xs: 1.75rem;
-  --ui-control-height-sm: 2.25rem;
-  --ui-control-height-md: 2.5rem;
-  --ui-control-height-lg: 2.75rem;
-  --ui-control-padding-x: 1rem;
+  --ui-control-height-xs: 1.8rem;
+  --ui-control-height-sm: 2.3rem;
+  --ui-control-height-md: 2.55rem;
+  --ui-control-height-lg: 2.85rem;
+  --ui-control-padding-x: 1.15rem;
   --ui-button-padding-scale-xs: 0.5;
-  --ui-button-padding-scale-sm: 0.75;
-  --ui-button-padding-scale-lg: 2;
-  --ui-button-gap: 0.5rem;
+  --ui-button-padding-scale-sm: 0.72;
+  --ui-button-padding-scale-lg: 1.9;
+  --ui-button-gap: 0.55rem;
 
   /* painéis */
-  --ui-panel-padding-x: 1.5rem;
-  --ui-panel-padding-y: 1.5rem;
+  --ui-panel-padding-x: 1.6rem;
+  --ui-panel-padding-y: 1.6rem;
 
-  /* base shadcn — dia: smog cinza-azulado, ciano/magenta já presentes mas contidos pra contraste
-     em fundo claro */
-  --background: oklch(0.96 0.014 150);
-  --foreground: oklch(0.26 0.03 160);
-  --card: oklch(0.985 0.01 145);
-  --card-foreground: oklch(0.26 0.03 160);
-  --popover: oklch(0.985 0.01 145);
-  --popover-foreground: oklch(0.26 0.03 160);
-  --primary: oklch(0.45 0.11 155);
-  --primary-foreground: oklch(0.97 0.02 150);
-  --secondary: oklch(0.93 0.02 152);
-  --secondary-foreground: oklch(0.28 0.03 160);
-  --muted: oklch(0.93 0.02 152);
-  --muted-foreground: oklch(0.48 0.03 158);
-  --accent: oklch(0.75 0.13 195);
-  --accent-foreground: oklch(0.2 0.04 200);
-  --destructive: oklch(0.55 0.2 28);
-  --destructive-foreground: oklch(0.98 0.01 28);
-  --border: oklch(0.87 0.02 150);
-  --input: oklch(0.87 0.02 150);
-  --ring: oklch(0.65 0.13 190);
+  /* base shadcn — dia no bosque: pergaminho quente com fundo esverdeado, musgo como cor viva,
+     casca/âmbar como acento */
+  --background: oklch(0.955 0.012 118);
+  --foreground: oklch(0.28 0.028 133);
+  --card: oklch(0.99 0.008 108);
+  --card-foreground: oklch(0.28 0.028 133);
+  --popover: oklch(0.99 0.008 108);
+  --popover-foreground: oklch(0.28 0.028 133);
+  --primary: oklch(0.52 0.108 145);
+  --primary-foreground: oklch(0.98 0.02 120);
+  --secondary: oklch(0.925 0.022 128);
+  --secondary-foreground: oklch(0.3 0.028 133);
+  --muted: oklch(0.925 0.022 128);
+  --muted-foreground: oklch(0.47 0.03 136);
+  --accent: oklch(0.63 0.098 74);
+  --accent-foreground: oklch(0.98 0.02 74);
+  --destructive: oklch(0.54 0.19 29);
+  --destructive-foreground: oklch(0.98 0.01 29);
+  --border: oklch(0.88 0.02 128);
+  --input: oklch(0.88 0.02 128);
+  --ring: oklch(0.55 0.108 145);
 
-  /* shadow */
-  --shadow-color: oklch(0.5 0.02 260);
-  --shadow-color-strong: oklch(0.3 0.03 270);
-  --shadow-color-soft: color-mix(in oklch, var(--shadow-color) 30%, transparent);
-  --shadow-color-strong-soft: color-mix(in oklch, var(--shadow-color-strong) 26%, transparent);
-  --shadow-panel: 0 20px 60px -40px var(--shadow-color-soft);
-  --shadow-float: 0 14px 34px -22px var(--shadow-color-strong-soft);
-  --shadow-header: 0 10px 24px -18px var(--shadow-color-strong-soft);
+  /* shadow — luz difusa de dossel, sombra macia e verde-acinzentada */
+  --shadow-color: oklch(0.5 0.03 140);
+  --shadow-color-strong: oklch(0.32 0.035 140);
+  --shadow-color-soft: color-mix(in oklch, var(--shadow-color) 22%, transparent);
+  --shadow-color-strong-soft: color-mix(in oklch, var(--shadow-color-strong) 24%, transparent);
+  --shadow-panel: 0 1px 2px -1px var(--shadow-color-strong-soft), 0 14px 34px -20px var(--shadow-color-soft);
+  --shadow-float: 0 16px 40px -22px var(--shadow-color-strong-soft);
+  --shadow-header: 0 1px 0 0 var(--border);
 
-  /* sidebar — rail de ícones com dois estados (docs pedido desta sessão: opção de expandir e
-     mostrar rótulo, como o par --sidebar-width-expanded/collapsed do Slime, mas com nomes
-     próprios porque o significado de "colapsado" aqui é ícone+flyout, não texto escondido). */
+  /* rail de ícones — dois estados (ver RailNavLink.tsx). Nomes próprios porque "colapsado" aqui é
+     ícone+flyout, não texto escondido. */
   --sidebar-width-rail-collapsed: 5.5rem;
-  --sidebar-width-rail-expanded: 15rem;
+  --sidebar-width-rail-expanded: 15.5rem;
 
-  --sidebar-bg-start: oklch(0.945 0.02 152);
-  --sidebar-bg-end: oklch(0.915 0.03 158);
-  --sidebar-bg: linear-gradient(180deg, oklch(0.945 0.02 152) 0%, oklch(0.915 0.03 158) 100%);
-  --sidebar-bg-admin-start: oklch(0.935 0.026 195);
-  --sidebar-bg-admin-end: oklch(0.905 0.036 198);
-  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.935 0.026 195) 0%, oklch(0.905 0.036 198) 100%);
+  --sidebar-bg-start: oklch(0.945 0.024 126);
+  --sidebar-bg-end: oklch(0.93 0.03 132);
+  --sidebar-bg: linear-gradient(180deg, oklch(0.945 0.024 126) 0%, oklch(0.928 0.032 133) 100%);
+  --sidebar-bg-admin-start: oklch(0.94 0.026 96);
+  --sidebar-bg-admin-end: oklch(0.925 0.034 88);
+  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.94 0.026 96) 0%, oklch(0.923 0.036 88) 100%);
 
-  /* status semântico — amarelo neon, cor de marca de Cyberpunk 2077, reservado só pro warning */
-  --warning: oklch(0.62 0.17 95);
-  --warning-foreground: oklch(0.16 0.02 95);
-  --warning-soft: color-mix(in oklch, var(--warning) 14%, var(--card));
+  /* status semântico */
+  --warning: oklch(0.58 0.12 76);
+  --warning-foreground: oklch(0.98 0.01 76);
+  --warning-soft: color-mix(in oklch, var(--warning) 13%, var(--card));
   --warning-border: color-mix(in oklch, var(--warning) 32%, var(--border));
 
-  --success: oklch(0.58 0.16 150);
-  --success-foreground: oklch(0.98 0.01 150);
-  --success-soft: color-mix(in oklch, var(--success) 12%, var(--card));
-  --success-border: color-mix(in oklch, var(--success) 30%, var(--border));
+  --success: oklch(0.54 0.13 148);
+  --success-foreground: oklch(0.98 0.01 148);
+  --success-soft: color-mix(in oklch, var(--success) 13%, var(--card));
+  --success-border: color-mix(in oklch, var(--success) 32%, var(--border));
 
-  /* charts — reaproveita o vocabulário shadcn já declarado acima; faltava neste tema. chart-6/
-     chart-7 são o par categórico oficial (todo tema declara os dois) — hue 250/300 (azul/violeta),
-     não o padrão 235/350 dos outros temas: primary(196)/accent(340) já ocupam quase a roda toda
-     neste tema saturado, então o par default colidia (falhava scripts/validate_palette.js do
-     skill de dataviz). 250/300 com bastante distância de luminosidade entre os dois é o par que
-     passou validado (ΔE normal 16.9, protanopia 8.4). */
   --chart-1: var(--primary);
   --chart-2: var(--accent);
   --chart-3: var(--muted-foreground);
   --chart-4: var(--warning);
   --chart-5: var(--destructive);
-  --chart-6: oklch(0.45 0.15 250);
-  --chart-7: oklch(0.56 0.13 300);
+  --chart-6: oklch(0.5 0.1 200);
+  --chart-7: oklch(0.58 0.13 40);
 
-  /* Superfície "apresentação" — telão/projetor/slide, sempre a versão escura deste tema,
-     independente do light/dark ativo (ver racional completo em venore-slime/theme.css). */
-  /* Texto/borda sobre imagem com véu escuro (ex: capa de curso na Academy) — claro
-     independente de light/dark, por isso só no bloco base. Ver venore-slime/theme.css. */
   --overlay-foreground: oklch(1 0 0);
 
-  --presentation-ground: oklch(0.07 0.02 278);
-  --presentation-card: oklch(0.1 0.024 280);
-  --presentation-border: oklch(0.22 0.04 280);
-  --presentation-foreground: oklch(0.95 0.018 200);
-  --presentation-muted-foreground: oklch(0.68 0.03 255);
+  --presentation-ground: oklch(0.17 0.022 150);
+  --presentation-card: oklch(0.21 0.024 150);
+  --presentation-border: oklch(0.32 0.03 148);
+  --presentation-foreground: oklch(0.95 0.018 128);
+  --presentation-muted-foreground: oklch(0.72 0.028 138);
 
-  --presentation-success: oklch(0.75 0.19 150);
+  --presentation-success: oklch(0.72 0.16 148);
   --presentation-success-soft: color-mix(in oklch, var(--presentation-success) 16%, var(--presentation-card));
   --presentation-success-border: color-mix(in oklch, var(--presentation-success) 34%, var(--presentation-border));
 
-  --presentation-warning: oklch(0.84 0.18 97);
+  --presentation-warning: oklch(0.76 0.14 78);
   --presentation-warning-soft: color-mix(in oklch, var(--presentation-warning) 16%, var(--presentation-card));
   --presentation-warning-border: color-mix(in oklch, var(--presentation-warning) 34%, var(--presentation-border));
 
-  --presentation-destructive: oklch(0.63 0.25 25);
+  --presentation-destructive: oklch(0.62 0.21 28);
+  --presentation-renewed: oklch(0.56 0.11 200);
+  --presentation-new: oklch(0.6 0.13 40);
 
-  /* presentation-renewed/new — versão invariante de chart-6/chart-7 pra composição dentro da
-     superfície de apresentação (sempre escura); ver racional completo em venore-slime/theme.css.
-     Hue 250/300 (não o par default 235/350) pelo mesmo motivo do chart-6/chart-7 deste tema. */
-  --presentation-renewed: oklch(0.52 0.15 250);
-  --presentation-new: oklch(0.66 0.13 300);
+  /* identidade — dossel: verde vivo suave por cima, textura orgânica de folhagem tileada
+     (SVG data-URI, não gradiente) sobre um degradê vertical calmo */
+  --app-bg-start: oklch(0.958 0.014 118);
+  --app-bg-mid: oklch(0.94 0.02 130);
+  --app-bg-end: oklch(0.93 0.026 134);
+  --app-background:
+    radial-gradient(120% 60% at 12% -8%, color-mix(in oklch, oklch(0.52 0.108 145) 12%, transparent) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%233c5a2e' stroke-opacity='0.05' stroke-width='1.1'%3E%3Cpath d='M22 3c7 6 7 16 0 22-7-6-7-16 0-22z'/%3E%3Cpath d='M22 25v16'/%3E%3Cpath d='M4 40c6-4 12-4 18 0'/%3E%3Cpath d='M22 40c6-4 12-4 18 0'/%3E%3C/g%3E%3C/svg%3E")
+    repeat,
+    linear-gradient(180deg, oklch(0.958 0.014 118) 0%, oklch(0.93 0.026 134) 100%);
 
-  /* identidade — céu poluído com neon já ligado por cima, discreto contra o céu ainda claro */
-  --app-bg-start: oklch(0.965 0.014 150);
-  --app-bg-mid: oklch(0.91 0.014 262);
-  --app-bg-end: oklch(0.93 0.026 158);
-  --app-background: radial-gradient(110% 80% at 90% 0%, color-mix(in oklch, oklch(0.75 0.13 195) 14%, transparent) 0%, transparent 55%), linear-gradient(180deg, oklch(0.965 0.014 150) 0%, oklch(0.925 0.028 158) 100%);
-
-  --header-bg: oklch(0.97 0.006 258);
+  --header-bg: oklch(0.97 0.012 116);
   --header-chip-bg: color-mix(in oklch, var(--header-bg) 74%, var(--card));
   --header-avatar-bg: color-mix(in oklch, var(--accent) 20%, var(--header-bg));
   --header-avatar-fg: var(--foreground);
@@ -175,71 +159,71 @@
 }
 
 [data-theme="druids"].dark {
-  /* base shadcn — noite: bem mais escura que a primeira versão (pedido desta sessão), quase preto
-     puro em vez de um cinza-azulado médio, pra ciano/magenta neon terem mais contraste pra
-     "estourar" contra o fundo */
-  --background: oklch(0.17 0.02 160);
-  --foreground: oklch(0.92 0.018 150);
-  --card: oklch(0.21 0.022 162);
-  --card-foreground: oklch(0.92 0.018 150);
-  --popover: oklch(0.21 0.022 162);
-  --popover-foreground: oklch(0.92 0.018 150);
-  --primary: oklch(0.78 0.15 155);
-  --primary-foreground: oklch(0.16 0.03 160);
-  --secondary: oklch(0.26 0.024 162);
-  --secondary-foreground: oklch(0.92 0.018 150);
-  --muted: oklch(0.26 0.024 162);
-  --muted-foreground: oklch(0.7 0.03 155);
-  --accent: oklch(0.8 0.14 195);
-  --accent-foreground: oklch(0.15 0.04 200);
-  --destructive: oklch(0.64 0.21 28);
-  --destructive-foreground: oklch(0.98 0.01 28);
-  --border: oklch(0.32 0.026 160);
-  --input: oklch(0.32 0.026 160);
-  --ring: oklch(0.8 0.14 195);
+  /* base shadcn — bosque ao anoitecer: verde profundo quase preto, musgo brilhante e âmbar de
+     lanterna como pontos de calor */
+  --background: oklch(0.185 0.022 150);
+  --foreground: oklch(0.92 0.02 122);
+  --card: oklch(0.228 0.024 150);
+  --card-foreground: oklch(0.92 0.02 122);
+  --popover: oklch(0.228 0.024 150);
+  --popover-foreground: oklch(0.92 0.02 122);
+  --primary: oklch(0.72 0.13 146);
+  --primary-foreground: oklch(0.16 0.03 150);
+  --secondary: oklch(0.27 0.026 150);
+  --secondary-foreground: oklch(0.92 0.02 122);
+  --muted: oklch(0.27 0.026 150);
+  --muted-foreground: oklch(0.71 0.03 132);
+  --accent: oklch(0.71 0.11 72);
+  --accent-foreground: oklch(0.16 0.03 72);
+  --destructive: oklch(0.63 0.2 29);
+  --destructive-foreground: oklch(0.98 0.01 29);
+  --border: oklch(0.33 0.026 150);
+  --input: oklch(0.33 0.026 150);
+  --ring: oklch(0.72 0.13 146);
 
-  /* shadow — praticamente tudo é sombra na cidade à noite */
-  --shadow-color: oklch(0.04 0.01 275);
-  --shadow-color-strong: oklch(0.015 0.005 275);
+  --shadow-color: oklch(0.05 0.015 150);
+  --shadow-color-strong: oklch(0.02 0.008 150);
   --shadow-color-soft: color-mix(in oklch, var(--shadow-color) 44%, transparent);
-  --shadow-color-strong-soft: color-mix(in oklch, var(--shadow-color-strong) 38%, transparent);
-  --shadow-panel: 0 24px 80px -46px var(--shadow-color-soft);
-  --shadow-float: 0 18px 44px -26px var(--shadow-color-strong-soft);
-  --shadow-header: 0 12px 30px -22px var(--shadow-color-strong-soft);
+  --shadow-color-strong-soft: color-mix(in oklch, var(--shadow-color-strong) 40%, transparent);
+  --shadow-panel: 0 1px 2px -1px var(--shadow-color-strong-soft), 0 16px 38px -20px var(--shadow-color-soft);
+  --shadow-float: 0 18px 44px -22px var(--shadow-color-strong-soft);
+  --shadow-header: 0 1px 0 0 var(--border);
 
-  --sidebar-bg-start: oklch(0.165 0.02 162);
-  --sidebar-bg-end: oklch(0.135 0.018 164);
-  --sidebar-bg: linear-gradient(180deg, oklch(0.165 0.02 162) 0%, oklch(0.135 0.018 164) 100%);
-  --sidebar-bg-admin-start: oklch(0.18 0.028 196);
-  --sidebar-bg-admin-end: oklch(0.145 0.024 198);
-  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.18 0.028 196) 0%, oklch(0.145 0.024 198) 100%);
+  --sidebar-bg-start: oklch(0.19 0.024 150);
+  --sidebar-bg-end: oklch(0.16 0.02 152);
+  --sidebar-bg: linear-gradient(180deg, oklch(0.19 0.024 150) 0%, oklch(0.158 0.02 152) 100%);
+  --sidebar-bg-admin-start: oklch(0.2 0.028 92);
+  --sidebar-bg-admin-end: oklch(0.165 0.024 88);
+  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.2 0.028 92) 0%, oklch(0.163 0.024 88) 100%);
 
-  --warning: oklch(0.84 0.18 97);
-  --warning-foreground: oklch(0.15 0.02 97);
-  --warning-soft: color-mix(in oklch, var(--warning) 18%, var(--card));
+  --warning: oklch(0.76 0.14 78);
+  --warning-foreground: oklch(0.16 0.02 78);
+  --warning-soft: color-mix(in oklch, var(--warning) 17%, var(--card));
   --warning-border: color-mix(in oklch, var(--warning) 36%, var(--border));
 
-  --success: oklch(0.75 0.19 150);
-  --success-foreground: oklch(0.15 0.02 150);
-  --success-soft: color-mix(in oklch, var(--success) 16%, var(--card));
-  --success-border: color-mix(in oklch, var(--success) 34%, var(--border));
+  --success: oklch(0.72 0.16 148);
+  --success-foreground: oklch(0.15 0.02 148);
+  --success-soft: color-mix(in oklch, var(--success) 17%, var(--card));
+  --success-border: color-mix(in oklch, var(--success) 36%, var(--border));
 
   --chart-1: var(--primary);
   --chart-2: var(--accent);
   --chart-3: var(--muted-foreground);
   --chart-4: var(--warning);
   --chart-5: var(--destructive);
-  --chart-6: oklch(0.52 0.15 250);
-  --chart-7: oklch(0.66 0.13 300);
+  --chart-6: oklch(0.6 0.1 200);
+  --chart-7: oklch(0.62 0.13 40);
 
-  /* identidade — skyline sob luz neon plena: glow ciano e magenta cortando o azul-violeta quase
-     preto do céu poluído, ainda mais escuro que a primeira versão (pedido desta sessão) */
-  --app-bg-start: oklch(0.18 0.02 160);
-  --app-bg-mid: oklch(0.068 0.026 280);
-  --app-bg-end: oklch(0.14 0.018 162);
-  --app-background: radial-gradient(110% 80% at 90% 0%, color-mix(in oklch, oklch(0.8 0.14 195) 16%, transparent) 0%, transparent 50%), linear-gradient(180deg, oklch(0.18 0.02 160) 0%, oklch(0.135 0.018 162) 100%);
+  --app-bg-start: oklch(0.19 0.022 150);
+  --app-bg-mid: oklch(0.165 0.02 150);
+  --app-bg-end: oklch(0.155 0.018 152);
+  --app-background:
+    radial-gradient(120% 60% at 12% -8%, color-mix(in oklch, oklch(0.72 0.13 146) 13%, transparent) 0%, transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23a9d69a' stroke-opacity='0.045' stroke-width='1.1'%3E%3Cpath d='M22 3c7 6 7 16 0 22-7-6-7-16 0-22z'/%3E%3Cpath d='M22 25v16'/%3E%3Cpath d='M4 40c6-4 12-4 18 0'/%3E%3Cpath d='M22 40c6-4 12-4 18 0'/%3E%3C/g%3E%3C/svg%3E")
+    repeat,
+    linear-gradient(180deg, oklch(0.19 0.022 150) 0%, oklch(0.152 0.018 152) 100%);
 
-  --header-bg: oklch(0.06 0.022 278);
+  --header-bg: oklch(0.2 0.022 150);
   --header-chip-bg: color-mix(in oklch, var(--header-bg) 74%, var(--card));
   --header-avatar-bg: color-mix(in oklch, var(--accent) 22%, var(--header-bg));
   --header-avatar-fg: var(--foreground);
@@ -247,19 +231,33 @@
   --header-border-strong: color-mix(in oklch, var(--primary) 44%, var(--accent));
 }
 
-/* Animação de identidade (pedido desta sessão: "pode acrescentar animações") — glow pulsante na
-   barra de item ativo do rail, único keyframe deste tema. @keyframes é sempre top-level (não
-   aninha em seletor), então fica fora dos blocos [data-theme=...] acima; só é referenciado pela
-   classe utilitária animate-[nightcity-pulse_...] usada em RailNavLink.tsx, então não afeta outro
-   tema mesmo carregado no mesmo bundle. prefers-reduced-motion já é tratado globalmente
-   (src/app/globals.css força animation-duration: 0.01ms !important), não precisa de tratamento
-   próprio aqui. */
-@keyframes nightcity-pulse {
+/* Elementos de identidade — escopados ao tema, nunca vazam pra outro tema no mesmo bundle.
+   Casca/folha nos controles: borda quente de madeira + brilho interno suave (luz no limbo da
+   folha). Painéis ganham uma nervura verde na borda esquerda. */
+[data-theme="druids"] [data-slot="button"] {
+  border: 1px solid color-mix(in oklch, var(--accent) 34%, var(--border));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--card) 60%, transparent);
+}
+[data-theme="druids"] [data-slot="card"],
+[data-theme="druids"] .rounded-panel {
+  border-left: 3px solid color-mix(in oklch, var(--primary) 44%, var(--border));
+}
+[data-theme="druids"] [data-slot="input"],
+[data-theme="druids"] [data-slot="select-trigger"] {
+  border-bottom-width: 2px;
+  border-bottom-color: color-mix(in oklch, var(--primary) 40%, var(--border));
+}
+
+/* Pulso suave de seiva na barra de item ativo do rail (RailNavLink.tsx) — respiração, não
+   glitch. prefers-reduced-motion já é neutralizado globalmente (globals.css). */
+@keyframes druids-breath {
   0%,
   100% {
     opacity: 1;
+    transform: translateY(-50%) scaleY(1);
   }
   50% {
-    opacity: 0.45;
+    opacity: 0.55;
+    transform: translateY(-50%) scaleY(0.82);
   }
 }
