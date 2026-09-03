@@ -65,25 +65,25 @@
 
   /* base shadcn — dia: smog cinza-azulado, ciano/magenta já presentes mas contidos pra contraste
      em fundo claro */
-  --background: oklch(0.94 0.008 258);
-  --foreground: oklch(0.19 0.03 280);
-  --card: oklch(0.985 0.004 258);
-  --card-foreground: oklch(0.19 0.03 280);
-  --popover: oklch(0.985 0.004 258);
-  --popover-foreground: oklch(0.19 0.03 280);
-  --primary: oklch(0.56 0.16 196);
-  --primary-foreground: oklch(0.98 0.01 196);
-  --secondary: oklch(0.885 0.012 260);
-  --secondary-foreground: oklch(0.19 0.03 280);
-  --muted: oklch(0.885 0.012 260);
-  --muted-foreground: oklch(0.44 0.03 265);
-  --accent: oklch(0.6 0.24 340);
-  --accent-foreground: oklch(0.98 0.02 340);
-  --destructive: oklch(0.56 0.22 25);
-  --destructive-foreground: oklch(0.98 0.01 25);
-  --border: oklch(0.78 0.015 260);
-  --input: oklch(0.78 0.015 260);
-  --ring: oklch(0.56 0.16 196);
+  --background: oklch(0.96 0.014 150);
+  --foreground: oklch(0.26 0.03 160);
+  --card: oklch(0.985 0.01 145);
+  --card-foreground: oklch(0.26 0.03 160);
+  --popover: oklch(0.985 0.01 145);
+  --popover-foreground: oklch(0.26 0.03 160);
+  --primary: oklch(0.45 0.11 155);
+  --primary-foreground: oklch(0.97 0.02 150);
+  --secondary: oklch(0.93 0.02 152);
+  --secondary-foreground: oklch(0.28 0.03 160);
+  --muted: oklch(0.93 0.02 152);
+  --muted-foreground: oklch(0.48 0.03 158);
+  --accent: oklch(0.75 0.13 195);
+  --accent-foreground: oklch(0.2 0.04 200);
+  --destructive: oklch(0.55 0.2 28);
+  --destructive-foreground: oklch(0.98 0.01 28);
+  --border: oklch(0.87 0.02 150);
+  --input: oklch(0.87 0.02 150);
+  --ring: oklch(0.65 0.13 190);
 
   /* shadow */
   --shadow-color: oklch(0.5 0.02 260);
@@ -100,12 +100,12 @@
   --sidebar-width-rail-collapsed: 5.5rem;
   --sidebar-width-rail-expanded: 15rem;
 
-  --sidebar-bg-start: oklch(0.92 0.012 262);
-  --sidebar-bg-end: oklch(0.87 0.022 268);
-  --sidebar-bg: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
-  --sidebar-bg-admin-start: oklch(0.9 0.02 340);
-  --sidebar-bg-admin-end: oklch(0.86 0.03 300);
-  --sidebar-bg-admin: linear-gradient(180deg, var(--sidebar-bg-admin-start) 0%, var(--sidebar-bg-admin-end) 100%);
+  --sidebar-bg-start: oklch(0.945 0.02 152);
+  --sidebar-bg-end: oklch(0.915 0.03 158);
+  --sidebar-bg: linear-gradient(180deg, oklch(0.945 0.02 152) 0%, oklch(0.915 0.03 158) 100%);
+  --sidebar-bg-admin-start: oklch(0.935 0.026 195);
+  --sidebar-bg-admin-end: oklch(0.905 0.036 198);
+  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.935 0.026 195) 0%, oklch(0.905 0.036 198) 100%);
 
   /* status semântico — amarelo neon, cor de marca de Cyberpunk 2077, reservado só pro warning */
   --warning: oklch(0.62 0.17 95);
@@ -161,25 +161,10 @@
   --presentation-new: oklch(0.66 0.13 300);
 
   /* identidade — céu poluído com neon já ligado por cima, discreto contra o céu ainda claro */
-  --app-bg-start: oklch(0.95 0.008 255);
+  --app-bg-start: oklch(0.965 0.014 150);
   --app-bg-mid: oklch(0.91 0.014 262);
-  --app-bg-end: oklch(0.88 0.018 268);
-  --app-background: radial-gradient(
-      130% 85% at 10% 6%,
-      color-mix(in oklch, var(--accent) 14%, transparent) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      120% 90% at 88% 14%,
-      color-mix(in oklch, var(--primary) 16%, transparent) 0%,
-      transparent 56%
-    ),
-    radial-gradient(
-      130% 105% at 50% 100%,
-      color-mix(in oklch, var(--popover) 70%, var(--app-bg-end)) 0%,
-      transparent 62%
-    ),
-    linear-gradient(180deg, var(--app-bg-start) 0%, var(--app-bg-mid) 48%, var(--app-bg-end) 100%);
+  --app-bg-end: oklch(0.93 0.026 158);
+  --app-background: radial-gradient(110% 80% at 90% 0%, color-mix(in oklch, oklch(0.75 0.13 195) 14%, transparent) 0%, transparent 55%), linear-gradient(180deg, oklch(0.965 0.014 150) 0%, oklch(0.925 0.028 158) 100%);
 
   --header-bg: oklch(0.97 0.006 258);
   --header-chip-bg: color-mix(in oklch, var(--header-bg) 74%, var(--card));
@@ -193,25 +178,25 @@
   /* base shadcn — noite: bem mais escura que a primeira versão (pedido desta sessão), quase preto
      puro em vez de um cinza-azulado médio, pra ciano/magenta neon terem mais contraste pra
      "estourar" contra o fundo */
-  --background: oklch(0.07 0.02 278);
-  --foreground: oklch(0.95 0.018 200);
-  --card: oklch(0.1 0.024 280);
-  --card-foreground: oklch(0.95 0.018 200);
-  --popover: oklch(0.1 0.024 280);
-  --popover-foreground: oklch(0.95 0.018 200);
-  --primary: oklch(0.85 0.16 196);
-  --primary-foreground: oklch(0.09 0.024 280);
-  --secondary: oklch(0.16 0.032 280);
-  --secondary-foreground: oklch(0.95 0.018 200);
-  --muted: oklch(0.16 0.032 280);
-  --muted-foreground: oklch(0.68 0.03 255);
-  --accent: oklch(0.73 0.25 340);
-  --accent-foreground: oklch(0.09 0.024 340);
-  --destructive: oklch(0.63 0.25 25);
-  --destructive-foreground: oklch(0.98 0.01 25);
-  --border: oklch(0.22 0.04 280);
-  --input: oklch(0.22 0.04 280);
-  --ring: oklch(0.85 0.16 196);
+  --background: oklch(0.17 0.02 160);
+  --foreground: oklch(0.92 0.018 150);
+  --card: oklch(0.21 0.022 162);
+  --card-foreground: oklch(0.92 0.018 150);
+  --popover: oklch(0.21 0.022 162);
+  --popover-foreground: oklch(0.92 0.018 150);
+  --primary: oklch(0.78 0.15 155);
+  --primary-foreground: oklch(0.16 0.03 160);
+  --secondary: oklch(0.26 0.024 162);
+  --secondary-foreground: oklch(0.92 0.018 150);
+  --muted: oklch(0.26 0.024 162);
+  --muted-foreground: oklch(0.7 0.03 155);
+  --accent: oklch(0.8 0.14 195);
+  --accent-foreground: oklch(0.15 0.04 200);
+  --destructive: oklch(0.64 0.21 28);
+  --destructive-foreground: oklch(0.98 0.01 28);
+  --border: oklch(0.32 0.026 160);
+  --input: oklch(0.32 0.026 160);
+  --ring: oklch(0.8 0.14 195);
 
   /* shadow — praticamente tudo é sombra na cidade à noite */
   --shadow-color: oklch(0.04 0.01 275);
@@ -222,12 +207,12 @@
   --shadow-float: 0 18px 44px -26px var(--shadow-color-strong-soft);
   --shadow-header: 0 12px 30px -22px var(--shadow-color-strong-soft);
 
-  --sidebar-bg-start: oklch(0.095 0.026 278);
-  --sidebar-bg-end: oklch(0.06 0.02 282);
-  --sidebar-bg: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
-  --sidebar-bg-admin-start: oklch(0.11 0.045 330);
-  --sidebar-bg-admin-end: oklch(0.07 0.04 300);
-  --sidebar-bg-admin: linear-gradient(180deg, var(--sidebar-bg-admin-start) 0%, var(--sidebar-bg-admin-end) 100%);
+  --sidebar-bg-start: oklch(0.165 0.02 162);
+  --sidebar-bg-end: oklch(0.135 0.018 164);
+  --sidebar-bg: linear-gradient(180deg, oklch(0.165 0.02 162) 0%, oklch(0.135 0.018 164) 100%);
+  --sidebar-bg-admin-start: oklch(0.18 0.028 196);
+  --sidebar-bg-admin-end: oklch(0.145 0.024 198);
+  --sidebar-bg-admin: linear-gradient(180deg, oklch(0.18 0.028 196) 0%, oklch(0.145 0.024 198) 100%);
 
   --warning: oklch(0.84 0.18 97);
   --warning-foreground: oklch(0.15 0.02 97);
@@ -249,25 +234,10 @@
 
   /* identidade — skyline sob luz neon plena: glow ciano e magenta cortando o azul-violeta quase
      preto do céu poluído, ainda mais escuro que a primeira versão (pedido desta sessão) */
-  --app-bg-start: oklch(0.06 0.022 278);
+  --app-bg-start: oklch(0.18 0.02 160);
   --app-bg-mid: oklch(0.068 0.026 280);
-  --app-bg-end: oklch(0.05 0.022 282);
-  --app-background: radial-gradient(
-      140% 90% at 10% 6%,
-      color-mix(in oklch, var(--accent) 24%, transparent) 0%,
-      transparent 52%
-    ),
-    radial-gradient(
-      125% 95% at 90% 16%,
-      color-mix(in oklch, var(--primary) 22%, transparent) 0%,
-      transparent 58%
-    ),
-    radial-gradient(
-      130% 110% at 50% 100%,
-      color-mix(in oklch, var(--popover) 72%, var(--app-bg-end)) 0%,
-      transparent 64%
-    ),
-    linear-gradient(180deg, var(--app-bg-start) 0%, var(--app-bg-mid) 46%, var(--app-bg-end) 100%);
+  --app-bg-end: oklch(0.14 0.018 162);
+  --app-background: radial-gradient(110% 80% at 90% 0%, color-mix(in oklch, oklch(0.8 0.14 195) 16%, transparent) 0%, transparent 50%), linear-gradient(180deg, oklch(0.18 0.02 160) 0%, oklch(0.135 0.018 162) 100%);
 
   --header-bg: oklch(0.06 0.022 278);
   --header-chip-bg: color-mix(in oklch, var(--header-bg) 74%, var(--card));
