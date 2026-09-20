@@ -1,22 +1,35 @@
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { NavGroup, SidebarLeftSlotProps } from "@venore/theme-sdk";
+"use client";
+
+import { useState, useTransition } from "react";
+import { ChevronLeft, ChevronRight, Globe2, ShieldCheck } from "lucide-react";
+import type { SidebarLeftSlotProps } from "@venore/theme-sdk";
 import { cn } from "@venore/theme-sdk/ui";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { SidebarNavLink } from "./SidebarNavLink";
-import { closeMobileNav } from "./mobile-nav-store";
-import { AdminNavSwitch } from "./AdminNavSwitch";
-import { RailNavLink } from "./RailNavLink";
+import { SIDEBAR_COLLAPSE_TOOLTIP_COLLAPSED_CLASSES } from "./sidebar-collapse-tooltip";
 
-// Estrutura deliberadamente diferente da SidebarLeftSlot do Venore Slime (docs/themes/
-// shell-contract.md): lá é uma coluna com texto que colapsa/expande, aqui é um rail de ícones que
-// também colapsa/expande — mas colapsado aqui significa "só ícone, com flyout no hover", não
-// "esconder tudo". `collapsed`/`onToggleCollapsed` do contrato (persistido em cookie, resolvido
-// no servidor, sem flash pós-hidratação) continuam em uso.
+// Exclusivo de navegação (main-nav ou admin-nav, conforme navMode) — não é área de widgets. O
+// toggle main-nav/admin-nav mora aqui, não no Header (docs/venore-docks.md — "Shell única"),
+// ANTES da navegação (não depois — pedido desta sessão, e é onde o protótipo de referência
+// coloca o SidebarSurfaceSwitch: platform-sidebar.tsx, dentro de um bloco com border-b no topo).
 //
-// Pedido desta sessão: switch site/admin e botão de expandir/colapsar sobem pro topo do rail (não
-// mais depois da lista de nav), e a lista de nav não rola mais (nem overflow-y-auto nem min-h-0 —
-// se a lista for maior que a viewport, ela simplesmente estica o rail, não ganha barra de rolagem
-// própria).
+// Abaixo de lg vira drawer off-canvas (MobileNavDrawer, client) fechado por padrão; a partir de
+// lg volta a ser a coluna fixa de sempre. Colapso (docs/ui/shell-spec.md §3.1-3.2) é exclusivo do
+// desktop: `collapsedFromServer` vem resolvido do cookie no servidor (get-sidebar-collapsed.ts),
+// então a largura certa está presente no primeiro HTML — sem flash de layout pós-hidratação. A
+// partir daí o componente é client e mantém o próprio `useState` (bug desta sessão: o toggle era
+// um `<form action={onToggleCollapsed}>` só-servidor — cada clique esperava o round-trip da
+// Server Action pra o cookie voltar lido e só então a classe de largura mudar, então a transição
+// CSS começava num instante que variava com a latência da rede em vez de no clique). Estado local
+// muda a classe na hora; a Server Action ainda roda por baixo (via startTransition, sem bloquear a
+// animação) só pra persistir o cookie e o próximo carregamento completo continuar acertando de
+// primeira — não é o padrão client-only sem persistência que o protótipo tinha e que já foi
+// registrado como "não portar" (docs/ui/shell-spec.md §3.3/§6.3).
+//
+// `<nav>` precisa do próprio `flex-1 min-h-0 overflow-y-auto`: o `<aside>` já preenche a altura
+// inteira (h-full, sem override lg:h-auto — bug desta sessão), mas sem isso o elemento de
+// navegação em si parava do tamanho do conteúdo, deixando espaço vazio abaixo em vez de esticar
+// (e rolar por conta própria se a lista crescer além da viewport).
 export function SidebarLeftSlot({
   enabled,
   navMode,
@@ -24,100 +37,192 @@ export function SidebarLeftSlot({
   navGroups,
   canToggleAdminNav,
   onToggleNavMode,
-  collapsed,
+  collapsed: collapsedFromServer,
   onToggleCollapsed,
 }: SidebarLeftSlotProps) {
+  const [collapsed, setCollapsed] = useState(collapsedFromServer);
+  const [, startTransition] = useTransition();
+
   if (!enabled) return null;
 
   const isAdmin = navMode === "admin";
 
+  function handleToggleCollapsed() {
+    setCollapsed((value) => !value);
+    startTransition(() => {
+      onToggleCollapsed();
+    });
+  }
+
   return (
-    <>
-      <aside
+    <MobileNavDrawer
+      asideClassName={cn(
+        // px-3 (não px-5 como no Venore Slime) é fixo em qualquer breakpoint e em qualquer estado
+        // de collapsed — o padding não pode depender de `collapsed` (bug de referência: padding
+        // não está na lista de propriedades de ui-motion-emphasis, então um px condicional trocaria
+        // instantaneamente enquanto a largura do <aside> ainda leva 300ms pra terminar, deslocando
+        // o ícone antes do fim da transição). Só `width` anima.
+        //
+        // Cópia deste tema: --sidebar-width-collapsed do Aurora é bem mais compacta (4.25rem) que
+        // a do Venore Slime (5.5rem) — px-5 (usado lá) não cabe: 4.25rem − 2×px-5 − padding do
+        // item − ícone ficava negativo, cortando o ícone (bug reportado). px-3 deixa folga
+        // suficiente pro rail compacto (ver SidebarNavLink.tsx pro resto da conta).
+        // Cópia deste tema: --sidebar-bg é a MESMA cor em main-nav e admin-nav (pedido desta
+        // sessão — o tom do admin ficou bom demais pra deixar só ali, ver theme.css). A
+        // distinção de modo vira borda: mais grossa e na cor do --ring quando admin, hairline
+        // --border quando main — não troca mais o painel inteiro.
+        // Cópia deste tema: "Grove" — a partir de lg a sidebar NÃO ocupa mais a altura inteira:
+        // vira uma cápsula flutuante (borda nos 4 lados + rounded-panel + shadow-float sempre
+        // ligada), centralizada verticalmente na viewport via sticky, não esticada pelo `flex`
+        // externo. lg:h-auto substitui o h-full (mobile continua edge-to-edge, off-canvas).
+        "relative flex h-full w-full flex-col px-3 py-6 text-foreground shadow-float bg-(image:--sidebar-bg) lg:ml-4 lg:h-auto lg:max-h-[calc(100dvh-6rem)] lg:w-(--sidebar-width-expanded) lg:shrink-0 lg:sticky lg:top-1/2 lg:-translate-y-1/2 lg:rounded-panel lg:border ui-motion-emphasis",
+        isAdmin ? "border-ring" : "border-border",
+        collapsed && "lg:w-(--sidebar-width-collapsed)",
+      )}
+    >
+      <div className="absolute top-4 right-0 z-10 hidden translate-x-1/2 lg:block">
+        <button
+          type="button"
+          onClick={handleToggleCollapsed}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? "Expandir barra lateral" : "Colapsar barra lateral"}
+          className="flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-panel ui-motion-base outline-none hover:bg-muted hover:border-ring active:border-ring focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {collapsed ? (
+            <ChevronRight className="size-4" aria-hidden="true" />
+          ) : (
+            <ChevronLeft className="size-4" aria-hidden="true" />
+          )}
+        </button>
+      </div>
+
+      {canToggleAdminNav && (
+        // pt-8: espaço reservado pro botão flutuante de colapso (top-4, size-11), que fica
+        // sobreposto ao canto superior direito do frame — mesma folga em expandido/colapsado pra
+        // não depender de cálculo fino de onde a coluna direita do pill termina.
+        <div className="shrink-0 border-b border-border pt-8 pb-4">
+          <SidebarSurfaceSwitch isAdmin={isAdmin} collapsed={collapsed} onToggleNavMode={onToggleNavMode} />
+        </div>
+      )}
+
+      <nav
+        data-nav-mode={navMode}
         className={cn(
-          "sticky top-0 hidden h-screen shrink-0 flex-col border-r py-4 ui-motion-emphasis lg:flex",
-          collapsed ? "w-(--sidebar-width-rail-collapsed) items-center" : "w-(--sidebar-width-rail-expanded) items-stretch",
-          isAdmin ? "border-ring bg-(image:--sidebar-bg-admin)" : "border-border bg-(image:--sidebar-bg)",
+          "min-h-0 flex-1 space-y-1 overflow-y-auto",
+          // Sem o switch acima (usuário sem permissão admin), o <nav> é o primeiro filho — precisa
+          // da mesma folga pro botão flutuante de colapso que o bloco do switch reserva.
+          canToggleAdminNav ? "pt-2" : "pt-8",
         )}
       >
-        <div className={cn("flex w-full flex-col gap-3 pb-3", collapsed && "items-center")}>
-          <form
-            action={onToggleCollapsed}
-            className={collapsed ? "flex w-full justify-center" : "flex w-full justify-end px-2"}
-          >
-            <button
-              type="submit"
-              aria-expanded={!collapsed}
-              aria-label={collapsed ? "Expandir barra lateral" : "Colapsar barra lateral"}
-              className="flex size-8 items-center justify-center rounded-sm border border-border bg-card text-foreground ui-motion-base outline-none hover:border-ring hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {collapsed ? <ChevronRight className="size-4" aria-hidden="true" /> : <ChevronLeft className="size-4" aria-hidden="true" />}
-            </button>
-          </form>
-
-          {canToggleAdminNav && <AdminNavSwitch isAdmin={isAdmin} collapsed={collapsed} onToggleNavMode={onToggleNavMode} />}
-
-          <span aria-hidden="true" className={collapsed ? "h-px w-6 bg-border" : "h-px w-full bg-border"} />
-        </div>
-
-        <nav data-nav-mode={navMode} className={cn("flex w-full flex-1 flex-col gap-1", collapsed ? "items-center" : "items-stretch")}>
-          {isAdmin
-            ? navGroups.map((group, index) => (
-                <div key={group.key} className={cn("flex w-full flex-col gap-1", collapsed && "items-center")}>
-                  {index > 0 && <span aria-hidden="true" className={collapsed ? "my-1.5 h-px w-6 bg-border" : "my-1.5 h-px w-full bg-border"} />}
-                  {group.items.map((item) => (
-                    <RailNavLink key={item.key} item={item} collapsed={collapsed} />
-                  ))}
+        {isAdmin
+          ? navGroups.map((group) => (
+              <div key={group.key} className="space-y-1 pb-4">
+                {/* Título da seção (expandido) e divisor fino (colapsado) ocupam uma faixa de
+                    altura FIXA e sempre presente no flex flow — nunca `hidden`/`block` (bug desta
+                    sessão: display:none tira o elemento do cálculo de layout no mesmo quadro em
+                    que troca, deslocando os ícones do grupo pra cima antes do <aside> terminar de
+                    animar a largura). Título e divisor só fazem crossfade de opacidade por cima
+                    um do outro; a altura do bloco nunca muda. */}
+                <div className="relative h-5">
+                  <p
+                    className={cn(
+                      "absolute inset-0 px-3 pb-1 text-[11px] font-semibold uppercase tracking-caps text-muted-foreground/70 ui-motion-emphasis",
+                      collapsed && "lg:opacity-0",
+                    )}
+                  >
+                    {group.label}
+                  </p>
+                  <div
+                    className={cn("absolute inset-x-2 top-1/2 h-px -translate-y-1/2 bg-border opacity-0 ui-motion-emphasis", collapsed && "lg:opacity-100")}
+                    aria-hidden="true"
+                  />
                 </div>
-              ))
-            : navItems.map((item) => <RailNavLink key={item.key} item={item} collapsed={collapsed} />)}
+                {group.items.map((item) => (
+                  <SidebarNavLink key={item.key} item={item} collapsed={collapsed} isAdmin={isAdmin} />
+                ))}
+              </div>
+            ))
+          : navItems.map((item) => <SidebarNavLink key={item.key} item={item} collapsed={collapsed} isAdmin={isAdmin} />)}
 
-          {isAdmin && navGroups.length === 0 && <p className="text-[10px] text-muted-foreground/56">—</p>}
-          {!isAdmin && navItems.length === 0 && <p className="text-[10px] text-muted-foreground/56">—</p>}
-        </nav>
-      </aside>
-
-      {/* Off-canvas mobile — o próprio MobileNavDrawer some em `lg:` (ver asideClassName abaixo);
-          o rail acima é quem assume a partir daí. Sempre "expandido" (lista cheia), o estado
-          collapsed é exclusivo do desktop, mesmo critério documentado no Slime. */}
-      <MobileNavDrawer asideClassName="flex h-full w-full flex-col gap-4 bg-card px-5 py-6 text-foreground shadow-float lg:hidden">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-caps text-muted-foreground">Navegação</p>
-          <button
-            type="button"
-            onClick={closeMobileNav}
-            aria-label="Fechar navegação"
-            className="ui-icon-button-sm ui-motion-base outline-none hover:bg-accent/14 focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <X className="size-4" aria-hidden="true" />
-          </button>
-        </div>
-
-        {canToggleAdminNav && (
-          <div className="rounded-sm border border-border bg-muted py-2">
-            <AdminNavSwitch isAdmin={isAdmin} collapsed={false} onToggleNavMode={onToggleNavMode} />
-          </div>
+        {isAdmin && navGroups.length === 0 && (
+          <p className="px-3 text-sm text-muted-foreground/56">—</p>
         )}
-
-        <nav data-nav-mode={navMode} className="min-h-0 flex-1 space-y-1 overflow-y-auto">
-          {isAdmin
-            ? navGroups.map((group) => <MobileNavGroup key={group.key} group={group} />)
-            : navItems.map((item) => <SidebarNavLink key={item.key} item={item} collapsed={false} isAdmin={false} />)}
-          {isAdmin && navGroups.length === 0 && <p className="px-3 text-sm text-muted-foreground/56">—</p>}
-          {!isAdmin && navItems.length === 0 && <p className="px-3 text-sm text-muted-foreground/56">—</p>}
-        </nav>
-      </MobileNavDrawer>
-    </>
+        {!isAdmin && navItems.length === 0 && <p className="px-3 text-sm text-muted-foreground/56">—</p>}
+      </nav>
+    </MobileNavDrawer>
   );
 }
 
-function MobileNavGroup({ group }: { group: NavGroup }) {
+function SidebarSurfaceSwitch({
+  isAdmin,
+  collapsed,
+  onToggleNavMode,
+}: {
+  isAdmin: boolean;
+  collapsed: boolean;
+  onToggleNavMode: () => Promise<void>;
+}) {
+  const label = isAdmin ? "Sair do admin" : "Área administrativa";
+
   return (
-    <div className="space-y-1 pb-4">
-      <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-caps text-muted-foreground/70">{group.label}</p>
-      {group.items.map((item) => (
-        <SidebarNavLink key={item.key} item={item} collapsed={false} isAdmin />
-      ))}
-    </div>
+    <>
+      {/* Ícone único — colapso é conceito exclusivo de desktop (docs/ui/shell-spec.md §3.1): o
+          off-canvas mobile ignora o cookie e sempre mostra o pill completo abaixo, mesmo com
+          collapsed=true, por isso este bloco só aparece via `lg:flex` quando de fato colapsada,
+          nunca por padrão (mobile-first). */}
+      <form action={onToggleNavMode} className={cn("hidden justify-center", collapsed && "lg:flex")}>
+        <button
+          type="submit"
+          aria-label={label}
+          className="group/sidebar-collapse-target relative flex size-11 items-center justify-center rounded-xl border border-border bg-muted text-foreground shadow-panel ui-motion-base outline-none hover:border-ring active:border-ring focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {isAdmin ? <ShieldCheck className="size-4" aria-hidden="true" /> : <Globe2 className="size-4" aria-hidden="true" />}
+          <span className={cn("max-w-0 overflow-hidden whitespace-nowrap opacity-0", SIDEBAR_COLLAPSE_TOOLTIP_COLLAPSED_CLASSES)}>
+            {label}
+          </span>
+        </button>
+      </form>
+
+      {/* Pill de dois segmentos — versão padrão (mobile e desktop expandido); some só em
+          `lg:` quando colapsada, pra não duplicar o controle acima. Um único form (o toggle é
+          sempre "inverte o modo atual", não "vá pro modo X"): o segmento já ativo fica disabled —
+          visualmente marcado, mas sem submeter de novo — só o inativo dispara onToggleNavMode. */}
+      <form
+        action={onToggleNavMode}
+        className={cn("relative grid grid-cols-2 gap-1 rounded-xl border border-border bg-muted p-1", collapsed && "lg:hidden")}
+      >
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-y-1 z-0 w-[calc(50%-0.125rem)] rounded-lg border border-ring bg-card shadow-panel ui-motion-base",
+          isAdmin ? "left-[calc(50%+0.125rem)]" : "left-1",
+        )}
+      />
+      <button
+        type="submit"
+        disabled={!isAdmin}
+        aria-current={!isAdmin ? true : undefined}
+        className={cn(
+          "relative z-10 flex h-9 items-center justify-center gap-2 rounded-lg text-xs font-semibold uppercase tracking-caps ui-motion-base outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default",
+          !isAdmin ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        <Globe2 className="size-4" aria-hidden="true" />
+        Site
+      </button>
+      <button
+        type="submit"
+        disabled={isAdmin}
+        aria-current={isAdmin ? true : undefined}
+        className={cn(
+          "relative z-10 flex h-9 items-center justify-center gap-2 rounded-lg text-xs font-semibold uppercase tracking-caps ui-motion-base outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default",
+          isAdmin ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+        )}
+      >
+        <ShieldCheck className="size-4" aria-hidden="true" />
+        Admin
+      </button>
+      </form>
+    </>
   );
 }

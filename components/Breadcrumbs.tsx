@@ -2,9 +2,17 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { BreadcrumbItem } from "@venore/theme-sdk";
 
-// Faixa de rota estilo HUD — barra fina com fundo levemente destacado e um ponto neon à esquerda,
-// em vez da lista solta e sem chrome do Breadcrumbs do Venore Slime. Puramente apresentacional,
-// mesmo contrato de slot (recebe a trilha já resolvida no servidor, nunca busca rota sozinho).
+// Puramente apresentacional — recebe a trilha e o JSON-LD já resolvidos no servidor
+// (platform/breadcrumbs/resolve-breadcrumbs.ts) e só renderiza; nunca busca rota/entidade sozinho
+// (Contrato de slot, mesmo princípio de HeaderSlot/FooterSlot). O design é deste tema
+// especificamente — outro tema é livre de desenhar a própria trilha do próprio jeito, contanto que
+// receba os mesmos `breadcrumbs`/`breadcrumbsJsonLd`.
+//
+// Colapso mobile (docs do pedido: "primeiro e último visíveis"): sem contar item, escondo os itens
+// do meio abaixo do breakpoint `sm` (mobile-first, AGENTS.md §4 — base sem prefixo é o estado
+// mobile) e mostro um "…" decorativo só nessa faixa. Nada é removido da árvore de acessibilidade —
+// é só `hidden`/`sm:inline-flex` no <li>, a lista completa (<ol>) continua exposta a leitor de
+// tela em qualquer largura de tela.
 export function Breadcrumbs({
   breadcrumbs,
   breadcrumbsJsonLd,
@@ -18,43 +26,53 @@ export function Breadcrumbs({
 
   return (
     <>
-      <nav aria-label="Breadcrumb" className="border-b border-border/70 bg-card/60">
-        <div className="mx-auto flex w-full max-w-7xl items-center gap-2 px-6 py-2.5">
-          <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_6px_var(--primary)]" />
-          <ol className="flex flex-wrap items-center gap-1.5 text-xs uppercase tracking-caps text-muted-foreground">
-            {breadcrumbs.map((item, index) => {
-              const isFirst = index === 0;
-              const isLast = index === breadcrumbs.length - 1;
-              const isCollapsedOnMobile = hasCollapsibleMiddle && !isFirst && !isLast;
+      <nav aria-label="Breadcrumb" className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-6 lg:px-8">
+        <ol className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+          {breadcrumbs.map((item, index) => {
+            const isFirst = index === 0;
+            const isLast = index === breadcrumbs.length - 1;
+            const isCollapsedOnMobile = hasCollapsibleMiddle && !isFirst && !isLast;
 
-              return (
-                <li key={item.key} className={`items-center gap-1.5 ${isCollapsedOnMobile ? "hidden sm:flex" : "flex"}`}>
-                  {!isFirst && <ChevronRight aria-hidden="true" className="size-3 shrink-0 text-muted-foreground/50" />}
-                  {item.current ? (
-                    <span aria-current="page" className="font-semibold text-primary">
-                      {item.label}
-                    </span>
-                  ) : item.href ? (
-                    <Link href={item.href} className="ui-motion-base hover:text-foreground">
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <span>{item.label}</span>
-                  )}
-                  {isFirst && hasCollapsibleMiddle && (
-                    <span aria-hidden="true" className="flex items-center gap-1.5 sm:hidden">
-                      <ChevronRight className="size-3 shrink-0 text-muted-foreground/50" />
-                      <span>…</span>
-                    </span>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+            return (
+              <li
+                key={item.key}
+                className={`items-center gap-1 ${isCollapsedOnMobile ? "hidden sm:flex" : "flex"}`}
+              >
+                {!isFirst && <ChevronRight aria-hidden="true" className="size-3 shrink-0 text-muted-foreground/56" />}
+                {item.current ? (
+                  <span aria-current="page" className="font-medium text-foreground">
+                    {item.label}
+                  </span>
+                ) : item.href ? (
+                  <Link
+                    href={item.href}
+                    className="rounded-sm px-1 py-0.5 ui-motion-base outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span>{item.label}</span>
+                )}
+                {/* Reticência decorativa, só entre o primeiro e o último em telas pequenas — nunca
+                    substitui os itens reais na árvore de acessibilidade, só o espaço deles. */}
+                {isFirst && hasCollapsibleMiddle && (
+                  <span aria-hidden="true" className="flex items-center gap-1 sm:hidden">
+                    <ChevronRight className="size-3 shrink-0 text-muted-foreground/56" />
+                    <span>…</span>
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
       </nav>
       {breadcrumbsJsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }} />
+        <script
+          type="application/ld+json"
+          // JSON-LD só pode ir pro DOM assim; conteúdo vem 100% do servidor
+          // (resolve-breadcrumbs.ts), nunca de input de usuário.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
+        />
       )}
     </>
   );
