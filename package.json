@@ -1,6 +1,6 @@
 {
   "name": "@venore/theme-druids",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Druids — refatoração completa: \"Grove\", sidebar em cápsula flutuante centralizada, musgo sobre areia quente.",
   "private": true,
   "type": "module",
